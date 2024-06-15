@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import logo from './ibis.png';
+import logo from './ibis-gray.png';
 const questions = [
   {
     question: "What are the primary goals and objectives of your project?",
@@ -161,7 +161,11 @@ const Questionnaire = () => {
        </div>
      ) : (
        <div className="image-container">
-         {image && <img src={image} alt="AWS Diagram" />}
+         {image && (
+            <div className="dark-mode-diagram">
+              <img src={image} alt="AWS Diagram" />
+            </div>
+          )}
        </div>
      )}
     </div>
