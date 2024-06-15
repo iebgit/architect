@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
+import logo from './ibis.png';
 const questions = [
   {
     question: "What are the primary goals and objectives of your project?",
@@ -138,28 +138,32 @@ const Questionnaire = () => {
     if (image){
       setShow(true)
     }
+
+    
   }, [image])
   
 
   return (
     <div>
+      <br/>
+      <img src={logo} alt="AWS Diagram" height={100} onClick={() => window.location.reload(false)} />
+      <h1>IBIS Architect</h1>
       {!show ? (
-        <div>
-          <h2>{questions[currentQuestion].question}</h2>
-          <ul>
-            {questions[currentQuestion].options.map((option, index) => (
-              <li key={index}>
-                <button onClick={async () => await handleAnswer(option)}>{option}</button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <div>
-          <h2>Questionnaire complete! Generating diagram...</h2>
-          {image && <img src={image} alt="AWS Services Recommendations" />}
-        </div>
-      )}
+         <div className="question">
+         <h2>{questions[currentQuestion].question}</h2>
+         <ul className="options">
+           {questions[currentQuestion].options.map((option, index) => (
+             <li key={index} className="option">
+               <button onClick={() => handleAnswer(option)}>{option}</button>
+             </li>
+           ))}
+         </ul>
+       </div>
+     ) : (
+       <div className="image-container">
+         {image && <img src={image} alt="AWS Diagram" />}
+       </div>
+     )}
     </div>
   );
 };

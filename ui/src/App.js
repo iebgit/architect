@@ -4,9 +4,9 @@ import Questionnaire from './Questionnaire';
 
 function App() {
   return (
-    <div className="App">
+    <center className="App">
       <Questionnaire/>
-    </div>
+    </center>
   );
 }
 
