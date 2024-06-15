@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from diagrams import Diagram, Cluster
+from diagrams import Diagram, Cluster, Edge
 from diagrams.aws.compute import EC2, Lambda, Fargate
 from diagrams.aws.database import RDS, DB, Aurora
 from diagrams.aws.storage import S3
@@ -59,20 +59,32 @@ def generate_diagram():
     recommended_services = data.get('services', [])
 
     # Generate the diagram and save to a file
-    file_path = "diagram.png"
-    with Diagram("AWS Services Recommendations", show=False, outformat="png", filename=file_path.split('.')[0], graph_attr={"splines": "ortho", "bgcolor": "transparent"} ):
-        service_nodes = {}
-        with Cluster("AWS Services"):
-            for service in recommended_services:
+    file_path = "diagrams_image.png"
+    clusters = []
+    service_nodes = {}
+    added_services = set()
+
+    for service, dependencies in common_configurations.items():
+        if service in recommended_services:
+            cluster_services = {service}
+            for dependency, label in dependencies:
+                if dependency in recommended_services:
+                    cluster_services.add(dependency)
+            if cluster_services - added_services:
+                clusters.append(cluster_services)
+                added_services.update(cluster_services)
+
+    with Diagram("", show=False, graph_attr={"splines": "ortho", "bgcolor": "transparent"}) as diag:
+        for cluster_services in clusters:
+            with Cluster("Amazon Web Services"):
+                for service in cluster_services:
+                    if service in service_mapping:
+                        service_nodes[service] = service_mapping[service](service)
+            for service in cluster_services:
                 if service in service_mapping:
-                    service_nodes[service] = service_mapping[service](service)
-        
-        # Create relationships based on common configurations
-        for service, dependencies in common_configurations.items():
-            if service in service_nodes:
-                for dependency, label in dependencies:
-                    if dependency in service_nodes:
-                        service_nodes[service] >> service_nodes[dependency]
+                    for dependency, label in common_configurations.get(service, []):
+                        if dependency in service_nodes:
+                            service_nodes[service] >> Edge(label=label) >> service_nodes[dependency]
 
     # Read the file and encode it in base64
     with open(file_path, "rb") as image_file:
