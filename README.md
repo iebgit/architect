@@ -24,4 +24,4 @@ This project is a web application designed to help determine the appropriate AWS
 
 Clone the repository using the following command:
 ```bash
-git clone https://github.com/yourusername/aws-solutions-architect-questionnaire.git
+git clone git@github.com:iebgit/architect.git
