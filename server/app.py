@@ -60,7 +60,7 @@ def generate_diagram():
 
     # Generate the diagram and save to a file
     file_path = "diagram.png"
-    with Diagram("AWS Services Recommendations", show=False, outformat="png", filename=file_path.split('.')[0], graph_attr={"splines": "ortho"}):
+    with Diagram("AWS Services Recommendations", show=False, outformat="png", filename=file_path.split('.')[0], graph_attr={"splines": "ortho", "bgcolor": "transparent"} ):
         service_nodes = {}
         with Cluster("AWS Services"):
             for service in recommended_services:
